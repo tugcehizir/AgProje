@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Çocuklar</title>
+    <meta name="description" content="">
+   
+    <link  rel="stylesheet"  type="text/css" src="style.css">
+   
+  </head>
+  <style>
+  body{
+	width: 1200px;
+	height: 100%;
+	margin-right: auto;
+	margin-left: auto;	
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	font-weight: 300;
+
+}
+
+.arkaplan{
+	background: linear-gradient(45deg, #20c3f3 0%,#6bcebb 100%);
+}
+
+.header{
+	margin-top: 25px;
+}
+
+.logo{
+	text-decoration: none;
+	color: white;
+	font-size: 25px;
+	float: left;
+}
+
+.menu{
+	float: right;
+	margin-top: 15px;
+
+}
+
+
+.menu .menueleman{
+	float: left;
+	margin: 15px;
+	padding: 15px;
+	font-size: 25px;
+}
+
+.menu .menueleman a{
+
+	text-decoration: none;
+
+	color: white;
+}
+
+.aktif{
+	color:gray!important;
+	border-bottom:1px gray solid;
+	padding: 5px;
+}
+
+
+.cizgi{
+	clear: both;
+	border-bottom: 1px white solid;
+}
+.left-content{
+	
+	width: 500px;
+	float:left;
+}
+.right-content{
+	float:left;
+}
+.right-content .container{
+	
+	width: 500px;
+}
+.right-content .container .progress{
+	margin-bottom:5px;
+}
+.footer{  
+	
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	bottom: 30px;
+	left: 0;
+	right: 0;
+	border-bottom: 2px white solid;
+}
+
+.altyazi{
+	margin-top: 10px;
+	padding-left: 100px;
+	color: white;
+}
+</style>
+  
+  <body class="arkaplan">
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  var socket= io.connect();
+  var isim=prompt("lütfen isminizi giriniz");
+  socket.emit("gonder",isim);
+  socket.on("al",function(veri)
+  {
+    if(veri != isim)
+    {
+      alert(veri + "sisteme girdi");
+    }
+  })
+  </script>
+  <div class="header">
+    <a class="logo" href="index.html"><h2>Uygulama</h2></a>
+
+    <div class="menu">
+      <div class="menueleman"><a href="index.html">Tanıtım</a></div>
+
+      
+      <div class="menueleman"><a href="anket.html">Anket</a></div>
+
+
+      <div class="menueleman"><a class="aktif" href="destek.html">Destek</a></div>
+
+    </div>
+  </div>
+
+  <div class="cizgi"></div>
+
+
+  <div class="content">
+    <script type="text/javascript">
+      function yazildi(){
+        var tus=window.event.keyCode;
+        if(tus==13){
+
+          var metin= document.getElementById("mesaj").value;
+          socket.emit("mesaj", {"mesaj":metin, "kullanici":isim});
+          document.getElementById("mesaj").value="";
+        }
+      }
+      socket.on("mesajAl",function(veri)
+      {
+        if(veri.kullanici != isim)
+        {
+
+    console.log(veri);
+    document.getElementById("mesajlar").append(veri.kullanici + ": " + veri.mesaj);
+
+        }
+      
+})
+      </script>
+    <textarea id='mesaj' onkeypress="yazildi()"></textarea> <br>
+    <div id='mesajlar'>
+
+    </div>
+  </div>
+
+  <div class="cizgi"></div>
+  <div class="footer"><span class="altyazi">Enes Eminler Tuğçe Hızır</span></div>
+  
+
+  </body>
+</html>
